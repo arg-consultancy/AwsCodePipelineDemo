@@ -3,9 +3,9 @@ terraform {
   required_version = ">=0.12.16"
 /*
   backend "s3" {
-    bucket         = "kyler-codebuild-demo-terraform-tfstate"
+    bucket         = "arg-codebuild-demo-terraform-tfstate"
     key            = "terraform.tfstate"
-    region         = "us-east-1"
+    region         = "eu-west-1"
     dynamodb_table = "codebuild-dynamodb-terraform-locking"
     encrypt        = true
   }
@@ -14,7 +14,7 @@ terraform {
 
 # Download any stable version in AWS provider of 2.36.0 or higher in 2.36 train
 provider "aws" {
-  region  = "us-east-1"
+  region  = "eu-west-1"
   version = "~> 2.36.0"
 /*
   assume_role {
@@ -28,8 +28,8 @@ provider "aws" {
 ## Build an S3 bucket and DynamoDB for Terraform state and locking
 module "bootstrap" {
   source                              = "./modules/bootstrap"
-  s3_tfstate_bucket                   = "kyler-codebuild-demo-terraform-tfstate"
-  s3_logging_bucket_name              = "kyler-codebuild-demo-logging-bucket"
+  s3_tfstate_bucket                   = "arg-codebuild-demo-terraform-tfstate"
+  s3_logging_bucket_name              = "arg-codebuild-demo-logging-bucket"
   dynamo_db_table_name                = "codebuild-dynamodb-terraform-locking"
   codebuild_iam_role_name             = "CodeBuildIamRole"
   codebuild_iam_role_policy_name      = "CodeBuildIamRolePolicy"
@@ -57,7 +57,7 @@ module "codebuild" {
 module "codepipeline" {
   source                               = "./modules/codepipeline"
   tf_codepipeline_name                 = "TerraformCodePipeline"
-  tf_codepipeline_artifact_bucket_name = "kyler-codebuild-demo-artifact-bucket-name"
+  tf_codepipeline_artifact_bucket_name = "arg-codebuild-demo-artifact-bucket-name"
   tf_codepipeline_role_name            = "TerraformCodePipelineIamRole"
   tf_codepipeline_role_policy_name     = "TerraformCodePipelineIamRolePolicy"
   terraform_codecommit_repo_name       = module.codecommit.terraform_codecommit_repo_name
